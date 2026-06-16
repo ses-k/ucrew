@@ -38,7 +38,7 @@ export default function Home() {
 
   const t = {
     en: {
-      nav: { about: 'About', voyages: 'Voyages', community: 'Community', join: 'Join Us' },
+      nav: { about: 'About', voyages: 'Voyages'},
       hero: {
         welcome: 'Welcome Aboard',
         subtitle: 'Where every journey begins with friendship, adventure, and a fair wind',
@@ -67,7 +67,7 @@ export default function Home() {
       }
     },
     ja: {
-      nav: { about: 'について', voyages: '航海', community: 'コミュニティ', join: '参加する' },
+      nav: { about: 'について', voyages: '航海' },
       hero: {
         welcome: 'ようこそ乗船',
         subtitle: '友情と冒険、そして順風とともに始まるすべての旅',
@@ -112,8 +112,6 @@ export default function Home() {
           <div className="hidden md:flex items-center gap-8 text-[#34455D] dark:text-gray-300">
             <a href="#about" className="hover:text-[#C39F72] dark:hover:text-[#EBCBB5] transition-colors">{current.nav.about}</a>
             <a href="#voyages" className="hover:text-[#C39F72] dark:hover:text-[#EBCBB5] transition-colors">{current.nav.voyages}</a>
-            <a href="#community" className="hover:text-[#C39F72] dark:hover:text-[#EBCBB5] transition-colors">{current.nav.community}</a>
-            <a href="#join" className="hover:text-[#C39F72] dark:hover:text-[#EBCBB5] transition-colors">{current.nav.join}</a>
           </div>
 
           <div className="flex items-center gap-3">
