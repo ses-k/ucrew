@@ -7,28 +7,11 @@ import { useState, useEffect } from 'react';
 export default function Home() {
   const [lang, setLang] = useState<'en' | 'ja'>('en');
   const [darkMode, setDarkMode] = useState(false);
-
-  // Improved dark mode initialization
-  useEffect(() => {
-    const saved = localStorage.getItem('darkMode');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    const shouldBeDark = saved !== null ? saved === 'true' : prefersDark;
-    
-    setDarkMode(shouldBeDark);
-    
-    if (shouldBeDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, []);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   const toggleDarkMode = () => {
     const newMode = !darkMode;
     setDarkMode(newMode);
-    localStorage.setItem('darkMode', String(newMode));
-
     if (newMode) {
       document.documentElement.classList.add('dark');
     } else {
@@ -36,9 +19,33 @@ export default function Home() {
     }
   };
 
+  // Voyages Data
+  const voyagesEn = [
+    { title: 'Pajama Party', location: 'Osaka', date: 'Every Friday' },
+    { title: 'BBQ Party', location: 'Tokyo', date: 'July 12' },
+    { title: 'Bar Hopping', location: 'Kyoto', date: 'August 10' }
+  ];
+
+  const voyagesJa = [
+    { title: 'パジャマパーティー', location: '大阪市', date: '毎週金曜日' },
+    { title: 'バーベキューパーティー', location: '東京', date: '7月12日' },
+    { title: 'バーホッピング', location: '京都', date: '8月10日' }
+  ];
+
+  const currentVoyages = lang === 'en' ? voyagesEn : voyagesJa;
+
+  // Auto Carousel - 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % currentVoyages.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [currentVoyages.length]);
+
   const t = {
     en: {
-      nav: { about: 'About', voyages: 'Voyages'},
+      nav: { about: 'About', voyages: 'Voyages' },
       hero: {
         welcome: 'Welcome Aboard',
         subtitle: 'Where every journey begins with friendship, adventure, and a fair wind',
@@ -51,15 +58,7 @@ export default function Home() {
         p1: "Ucrew is more than a boating community — it's a movement of adventurers, friends, and dreamers who believe the best stories are told on the water.",
         p2: 'Founded with the spirit of the open ocean, we connect captains and crew members for unforgettable voyages across lakes, coasts, and beyond.'
       },
-      voyages: {
-        title: 'Upcoming Voyages',
-        subtitle: 'Find your next adventure',
-        cards: [
-          { title: 'Pajama Party', location: 'Osaka', date: 'Every Friday' },
-          { title: 'BBQ Party', location: 'Tokyo', date: 'July 12' },
-          { title: 'Bar Hopping', location: 'Kyoto', date: 'August 10' }
-        ]
-      },
+      voyages: { title: 'Upcoming Voyages', subtitle: 'Find your next adventure' },
       footer: {
         cta: 'Ready to chart your course?',
         button: 'Become a Crew Member',
@@ -80,15 +79,7 @@ export default function Home() {
         p1: 'Ucrewはただのボートコミュニティではありません — 水の上で最高の物語が生まれると信じる冒険家、友人、夢見る人々のムーブメントです。',
         p2: '大海原の精神で設立され、湖、沿岸、そしてその先へと忘れられない航海で船長とクルーを繋げます。'
       },
-      voyages: {
-        title: '今後の航海',
-        subtitle: '次の冒険を見つけよう',
-        cards: [
-          { title: 'パジャマパーティー', location: '大阪市', date: '毎週金曜日' },
-          { title: 'バーベキューパーティー', location: '東京', date: '7月12日' },
-          { title: 'バーホッピング', location: '京都', date: '8月10日' }
-        ]
-      },
+      voyages: { title: '今後の航海', subtitle: '次の冒険を見つけよう' },
       footer: {
         cta: 'コースを決める準備はできましたか？',
         button: 'クルーメンバーになる',
@@ -100,16 +91,16 @@ export default function Home() {
   const current = t[lang];
 
   return (
-    <div className="min-h-screen bg-[#FCF9F7] dark:bg-[#1A2333] font-sans overflow-x-hidden transition-colors">
+    <div className="min-h-screen bg-[#FCF9F7] dark:bg-[#1F2A44] font-sans overflow-x-hidden transition-colors">
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 bg-white/95 dark:bg-[#1A2333]/95 backdrop-blur-md z-50 border-b border-[#2E3B51]/10 dark:border-white/10">
+      <nav className="fixed top-0 left-0 right-0 bg-white/95 dark:bg-[#1F2A44]/95 backdrop-blur-md z-50 border-b border-[#2E3B51]/10 dark:border-white/10">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Image src="/ucrew-icon.jpg" alt="Ucrew Logo" width={48} height={48} className="rounded-full" />
             <span className="text-2xl font-bold text-[#2E3B51] dark:text-white tracking-tight">Ucrew</span>
           </div>
 
-          <div className="hidden md:flex items-center gap-8 text-[#34455D] dark:text-gray-300">
+          <div className="hidden md:flex items-center gap-8 text-[#34455D] dark:text-gray-200">
             <a href="#about" className="hover:text-[#C39F72] dark:hover:text-[#EBCBB5] transition-colors">{current.nav.about}</a>
             <a href="#voyages" className="hover:text-[#C39F72] dark:hover:text-[#EBCBB5] transition-colors">{current.nav.voyages}</a>
           </div>
@@ -117,20 +108,20 @@ export default function Home() {
           <div className="flex items-center gap-3">
             <button 
               onClick={() => setLang(lang === 'en' ? 'ja' : 'en')}
-              className="flex items-center gap-2 text-sm text-[#2E3B51] dark:text-gray-300 hover:text-[#C39F72] dark:hover:text-[#EBCBB5]"
+              className="flex items-center gap-2 text-sm text-[#2E3B51] dark:text-gray-200 hover:text-[#C39F72] dark:hover:text-[#EBCBB5]"
             >
               <Globe className="w-4 h-4" /> {lang === 'en' ? '日本語' : 'English'}
             </button>
 
             <button 
               onClick={toggleDarkMode}
-              className="p-2 text-[#2E3B51] dark:text-gray-300 hover:text-[#C39F72] dark:hover:text-[#EBCBB5] transition-colors"
+              className="p-2 text-[#2E3B51] dark:text-gray-200 hover:text-[#C39F72] dark:hover:text-[#EBCBB5]"
               aria-label="Toggle theme"
             >
               {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
             
-            <button className="bg-[#2E3B51] hover:bg-[#34455D] dark:hover:bg-[#C39F72] dark:bg-[#EBCBB5] dark:text-[#1A2333] text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all">
+            <button className="bg-[#2E3B51] hover:bg-[#34455D] dark:hover:bg-[#EBCBB5] dark:bg-[#EBCBB5] dark:text-[#1F2A44] text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all">
               {lang === 'en' ? 'Set Sail' : '出航する'}
             </button>
           </div>
@@ -139,25 +130,12 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center pt-20">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/ucrew-background.jpg')" }}
-        />
-        
-        <div className="absolute inset-0 bg-gradient-to-br from-[#2E3B51]/80 dark:from-[#0F172A]/90 via-[#2E3B51]/60 dark:via-[#1A2333]/70 to-[#2E3B51]/75 dark:to-[#0F172A]/80" />
+        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/ucrew-background.jpg')" }} />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#2E3B51]/80 dark:from-[#0F172A]/85 via-[#2E3B51]/60 dark:via-[#1F2A44]/70 to-[#2E3B51]/75 dark:to-[#1F2A44]/80" />
         
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
           <div className="flex justify-center mb-8">
-            <div className="relative">
-              <Image 
-                src="/ucrew-icon.jpg" 
-                alt="Ucrew" 
-                width={320} 
-                height={320} 
-                className="drop-shadow-2xl rounded-full border-8 border-white/90 dark:border-white/70"
-                priority
-              />
-            </div>
+            <Image src="/ucrew-icon.jpg" alt="Ucrew" width={320} height={320} className="drop-shadow-2xl rounded-full border-8 border-white/90 dark:border-white/70" priority />
           </div>
           
           <h1 className="text-7xl md:text-8xl font-bold text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.7)] tracking-tighter mb-6">
@@ -169,7 +147,7 @@ export default function Home() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="#join" className="inline-flex items-center justify-center bg-white hover:bg-[#EBCBB5] text-[#2E3B51] dark:bg-[#EBCBB5] dark:hover:bg-white dark:text-[#1A2333] px-10 py-4 rounded-2xl text-lg font-semibold transition-all shadow-lg">
+            <a href="#join" className="inline-flex items-center justify-center bg-white hover:bg-[#EBCBB5] text-[#2E3B51] dark:bg-[#EBCBB5] dark:hover:bg-white dark:text-[#1F2A44] px-10 py-4 rounded-2xl text-lg font-semibold transition-all shadow-lg">
               {current.hero.join}
             </a>
             <a href="#voyages" className="inline-flex items-center justify-center border-2 border-white hover:bg-white/10 text-white px-10 py-4 rounded-2xl text-lg font-semibold transition-all shadow-lg">
@@ -177,51 +155,73 @@ export default function Home() {
             </a>
           </div>
         </div>
-
-        <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#FCF9F7] dark:from-[#1A2333] to-transparent" />
       </section>
 
-      {/* About Section */}
-      <section id="about" className="py-24 bg-white dark:bg-[#1A2333] text-[#34455D] dark:text-gray-300">
+      {/* Voyages Carousel - 3 seconds */}
+      <section id="voyages" className="py-24 bg-[#FCF9F7] dark:bg-[#1F2A44]">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div>
-              <div className="inline-block px-4 py-1.5 bg-[#EBCBB5] dark:bg-[#C39F72] text-[#2E3B51] dark:text-[#1A2333] rounded-full text-sm font-medium mb-6">
-                {current.about.label}
+          <div className="text-center mb-12">
+            <h2 className="text-5xl font-bold text-[#2E3B51] dark:text-white">{current.voyages.title}</h2>
+            <p className="text-[#34455D] dark:text-gray-300 mt-4">{current.voyages.subtitle}</p>
+          </div>
+
+          <div className="relative max-w-4xl mx-auto">
+            <div className="overflow-hidden rounded-3xl shadow-2xl">
+              <div 
+                className="flex transition-transform duration-700 ease-out" 
+                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+              >
+                {currentVoyages.map((voyage, index) => (
+                  <div key={index} className="w-full flex-shrink-0 px-4">
+                    <div className="bg-white dark:bg-[#2A3755] rounded-3xl p-12 text-center">
+                      <div className="w-20 h-20 bg-[#EBCBB5] dark:bg-[#D4A373] rounded-2xl flex items-center justify-center mb-10 mx-auto">
+                        <Anchor className="text-[#2E3B51] dark:text-[#1F2A44] w-10 h-10" />
+                      </div>
+                      <h3 className="text-4xl font-semibold text-[#2E3B51] dark:text-white mb-4">{voyage.title}</h3>
+                      <p className="text-2xl text-[#34455D] dark:text-gray-300">{voyage.location}</p>
+                      <p className="text-xl text-[#C39F72] dark:text-[#F0D4A8] mt-10 font-medium">{voyage.date}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <h2 className="text-5xl font-bold text-[#2E3B51] dark:text-white mb-8 leading-tight">
-                {current.about.title}
-              </h2>
-              <p className="text-lg leading-relaxed">{current.about.p1}</p>
-              <p className="text-lg mt-6 leading-relaxed">{current.about.p2}</p>
             </div>
-            
-            <div className="relative rounded-3xl overflow-hidden aspect-square bg-[#ABB8C9]/10 dark:bg-[#2E3B51]/30 flex items-center justify-center">
-              <Image src="/ucrew-icon.jpg" alt="Ucrew" width={280} height={280} className="rounded-full shadow-2xl" />
+
+            {/* Dots */}
+            <div className="flex justify-center gap-3 mt-10">
+              {currentVoyages.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentSlide(index)}
+                  className={`w-3.5 h-3.5 rounded-full transition-all ${
+                    currentSlide === index 
+                      ? 'bg-[#2E3B51] dark:bg-white scale-125' 
+                      : 'bg-gray-300 dark:bg-gray-600'
+                  }`}
+                />
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Voyages Section */}
-      <section id="voyages" className="py-24 bg-[#FCF9F7] dark:bg-[#121A2A]">
+      {/* About Section */}
+      <section id="about" className="py-24 bg-white dark:bg-[#1F2A44]">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold text-[#2E3B51] dark:text-white">{current.voyages.title}</h2>
-            <p className="text-[#34455D] dark:text-gray-400 mt-4">{current.voyages.subtitle}</p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            {current.voyages.cards.map((voyage, i) => (
-              <div key={i} className="bg-white dark:bg-[#1F2A3F] rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all group border border-transparent dark:border-white/5">
-                <div className="w-12 h-12 bg-[#EBCBB5] dark:bg-[#C39F72] rounded-2xl flex items-center justify-center mb-8 group-hover:rotate-12 transition-transform">
-                  <Anchor className="text-[#2E3B51] dark:text-[#1A2333]" />
-                </div>
-                <h3 className="text-2xl font-semibold text-[#2E3B51] dark:text-white mb-2">{voyage.title}</h3>
-                <p className="text-[#34455D] dark:text-gray-400">{voyage.location}</p>
-                <p className="text-sm text-[#C39F72] dark:text-[#EBCBB5] mt-8">{voyage.date}</p>
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+            <div>
+              <div className="inline-block px-4 py-1.5 bg-[#EBCBB5] dark:bg-[#D4A373] text-[#2E3B51] dark:text-[#1F2A44] rounded-full text-sm font-medium mb-6">
+                {current.about.label}
               </div>
-            ))}
+              <h2 className="text-5xl font-bold text-[#2E3B51] dark:text-white mb-8 leading-tight">
+                {current.about.title}
+              </h2>
+              <p className="text-lg leading-relaxed text-[#34455D] dark:text-gray-300">{current.about.p1}</p>
+              <p className="text-lg mt-6 leading-relaxed text-[#34455D] dark:text-gray-300">{current.about.p2}</p>
+            </div>
+            
+            <div className="relative rounded-3xl overflow-hidden aspect-square bg-[#ABB8C9]/10 dark:bg-[#2A3755] flex items-center justify-center">
+              <Image src="/ucrew-icon.jpg" alt="Ucrew" width={280} height={280} className="rounded-full shadow-2xl" />
+            </div>
           </div>
         </div>
       </section>
@@ -231,7 +231,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-6 text-center">
           <Image src="/ucrew-icon.jpg" alt="Ucrew" width={80} height={80} className="mx-auto mb-8 rounded-full" />
           <p className="text-2xl mb-8">{current.footer.cta}</p>
-          <button className="bg-white text-[#2E3B51] hover:bg-[#EBCBB5] dark:bg-[#EBCBB5] dark:text-[#1A2333] px-12 py-4 rounded-full text-lg font-semibold transition-colors">
+          <button className="bg-white text-[#2E3B51] hover:bg-[#EBCBB5] dark:bg-[#EBCBB5] dark:text-[#1F2A44] px-12 py-4 rounded-full text-lg font-semibold transition-colors">
             {current.footer.button}
           </button>
           <p className="mt-16 text-sm opacity-70">{current.footer.copyright}</p>
