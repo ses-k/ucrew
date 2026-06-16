@@ -1,21 +1,26 @@
 'use client';
 
 import Image from 'next/image';
-import { Ship, Users, Compass, Anchor, Globe, Sun, Moon } from 'lucide-react';
+import { Globe, Sun, Moon, Anchor } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
-export default function UcrewHomepage() {
+export default function Home() {
   const [lang, setLang] = useState<'en' | 'ja'>('en');
   const [darkMode, setDarkMode] = useState(false);
 
-  // Initialize dark mode from system preference or localStorage
+  // Improved dark mode initialization
   useEffect(() => {
-    const savedMode = localStorage.getItem('darkMode');
+    const saved = localStorage.getItem('darkMode');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
-    if (savedMode === 'true' || (!savedMode && prefersDark)) {
-      setDarkMode(true);
+    const shouldBeDark = saved !== null ? saved === 'true' : prefersDark;
+    
+    setDarkMode(shouldBeDark);
+    
+    if (shouldBeDark) {
       document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
     }
   }, []);
 
@@ -23,7 +28,7 @@ export default function UcrewHomepage() {
     const newMode = !darkMode;
     setDarkMode(newMode);
     localStorage.setItem('darkMode', String(newMode));
-    
+
     if (newMode) {
       document.documentElement.classList.add('dark');
     } else {
@@ -50,9 +55,9 @@ export default function UcrewHomepage() {
         title: 'Upcoming Voyages',
         subtitle: 'Find your next adventure',
         cards: [
-          { title: 'Sunset Cruise', location: 'Lake Michigan', date: 'Every Friday' },
-          { title: 'Coastal Explorer', location: 'Pacific Northwest', date: 'July 12' },
-          { title: 'Island Hopping', location: 'Caribbean', date: 'August' }
+          { title: 'Pajama Party', location: 'Osaka', date: 'Every Friday' },
+          { title: 'BBQ Party', location: 'Tokyo', date: 'July 12' },
+          { title: 'Bar Hopping', location: 'Kyoto', date: 'August 10' }
         ]
       },
       footer: {
@@ -79,9 +84,9 @@ export default function UcrewHomepage() {
         title: '今後の航海',
         subtitle: '次の冒険を見つけよう',
         cards: [
-          { title: 'サンセットクルーズ', location: 'ミシガン湖', date: '毎週金曜日' },
-          { title: '海岸探検', location: '太平洋岸北西部', date: '7月12日' },
-          { title: '島巡り', location: 'カリブ海', date: '8月' }
+          { title: 'パジャマパーティー', location: '大阪市', date: '毎週金曜日' },
+          { title: 'バーベキューパーティー', location: '東京', date: '7月12日' },
+          { title: 'バーホッピング', location: '京都', date: '8月10日' }
         ]
       },
       footer: {
@@ -112,7 +117,6 @@ export default function UcrewHomepage() {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Language Switcher */}
             <button 
               onClick={() => setLang(lang === 'en' ? 'ja' : 'en')}
               className="flex items-center gap-2 text-sm text-[#2E3B51] dark:text-gray-300 hover:text-[#C39F72] dark:hover:text-[#EBCBB5]"
@@ -120,11 +124,10 @@ export default function UcrewHomepage() {
               <Globe className="w-4 h-4" /> {lang === 'en' ? '日本語' : 'English'}
             </button>
 
-            {/* Dark Mode Toggle */}
             <button 
               onClick={toggleDarkMode}
               className="p-2 text-[#2E3B51] dark:text-gray-300 hover:text-[#C39F72] dark:hover:text-[#EBCBB5] transition-colors"
-              aria-label="Toggle dark mode"
+              aria-label="Toggle theme"
             >
               {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
@@ -138,13 +141,11 @@ export default function UcrewHomepage() {
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center pt-20">
-        {/* Background Image */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/background.jpg')" }}
+          style={{ backgroundImage: "url('/ucrew-background.jpg')" }}
         />
         
-        {/* Dark Mode Optimized Overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#2E3B51]/80 dark:from-[#0F172A]/90 via-[#2E3B51]/60 dark:via-[#1A2333]/70 to-[#2E3B51]/75 dark:to-[#0F172A]/80" />
         
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
