@@ -112,14 +112,6 @@ export default function Home() {
             >
               <Globe className="w-4 h-4" /> {lang === 'en' ? '日本語' : 'English'}
             </button>
-
-            <button 
-              onClick={toggleDarkMode}
-              className="p-2 text-[#2E3B51] dark:text-gray-200 hover:text-[#C39F72] dark:hover:text-[#EBCBB5]"
-              aria-label="Toggle theme"
-            >
-              {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            </button>
             
             <button className="bg-[#2E3B51] hover:bg-[#34455D] dark:hover:bg-[#EBCBB5] dark:bg-[#EBCBB5] dark:text-[#1F2A44] text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all">
               {lang === 'en' ? 'Set Sail' : '出航する'}
